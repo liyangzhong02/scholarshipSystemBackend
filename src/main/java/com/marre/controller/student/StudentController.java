@@ -53,7 +53,6 @@ public class StudentController {
     @PostMapping("/login")
     public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO){
         Student student = studentService.login(studentLoginDTO);
-
         // 生成token
         String token = JwtUtil.createToken(
                 jwtProperties.getAdminSecretKey(),
@@ -67,7 +66,6 @@ public class StudentController {
                 .sPassword(student.getSPassword())
                 .token(token)
                 .build();
-
         return Result.success(studentLoginVO);
     }
 
@@ -85,13 +83,6 @@ public class StudentController {
 
         return Result.success();
     }
-
-//    @GetMapping("/page")
-//    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO){
-//        log.info("分页查询中：{}", studentPageQueryDTO);
-//        PageResult pageResult = studentService.pageQuery(studentPageQueryDTO);
-//        return Result.success(pageResult);
-//    }
 
     @GetMapping("/{id}")
     public Result<Student> getById(@PathVariable Long id){

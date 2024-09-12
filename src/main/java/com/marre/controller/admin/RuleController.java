@@ -38,7 +38,6 @@ public class RuleController {
     public Result deleteByIds(@RequestParam List<Long> ids){
         log.info("删除规则：{}", ids);
         ruleService.deleteByIds(ids);
-
         return Result.success();
     }
 
@@ -53,7 +52,6 @@ public class RuleController {
     public Result<PageResult> page(RulePageQueryDTO rulePageQueryDTO){
         log.info("分页查询：{}", rulePageQueryDTO);
         PageResult page = ruleService.pageQuery(rulePageQueryDTO);
-
         return Result.success(page);
     }
 }

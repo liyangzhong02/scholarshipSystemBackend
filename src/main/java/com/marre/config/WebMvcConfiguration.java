@@ -32,7 +32,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 
     /**
-     * 注册自定义拦截器
+     * 注册自定义拦截器 --> jwt
      *
      * @param registry
      */
@@ -51,15 +51,15 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket docket() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("接口文档")
+                .title("教师端接口文档")
                 .version("1.0")
-                .description("接口文档")
+                .description("")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .groupName("管理端")
+                .groupName("教师管理端")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.controller.admin"))
+                .apis(RequestHandlerSelectors.basePackage("com.marre.controller.admin"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
@@ -68,15 +68,15 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Bean
     public Docket docket1() {
         ApiInfo apiInfo = new ApiInfoBuilder()
-                .title("接口文档")
+                .title("学生端接口文档")
                 .version("1.0")
-                .description("接口文档")
+                .description("")
                 .build();
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
-                .groupName("用户端")
+                .groupName("学生端")
                 .apiInfo(apiInfo)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.sky.controller.user"))
+                .apis(RequestHandlerSelectors.basePackage("com.marre.controller.student"))
                 .paths(PathSelectors.any())
                 .build();
         return docket;
@@ -84,7 +84,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 
     /**
-     * 设置静态资源映射
+     * 设置静态资源映射 配合Swagger
      * @param registry
      */
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
