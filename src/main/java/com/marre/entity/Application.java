@@ -1,7 +1,9 @@
 package com.marre.entity;
 
+import com.marre.enumeration.AuditStatus;
 import lombok.Data;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -11,17 +13,19 @@ import java.time.LocalDateTime;
  * @creat: 2024/9/12 09:45
  * 审核实体类
  */
+@Entity
 @Data
+@Table(name = "application")
 public class Application {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //逻辑外键 与学号绑定
     private Long sNo;
 
-    private Boolean status;
-
-    private String tips;
+    private AuditStatus status;
 
     private LocalDateTime createTime;
 

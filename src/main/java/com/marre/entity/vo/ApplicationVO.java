@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Data
 public class ApplicationVO {
 
+    private Long id;
+
     private Boolean status;
 
     private String tips;

@@ -1,21 +1,21 @@
 package com.marre.controller.admin;
 
-import com.marre.entity.dto.ApplicationDTO;
+import com.marre.entity.dto.*;
+import com.marre.enumeration.AuditStatus;
 import com.marre.service.EmployeeService;
 import com.marre.constant.JwtClaimsConstant;
 import com.marre.entity.Employee;
-import com.marre.entity.dto.EmployeeDTO;
-import com.marre.entity.dto.EmployeeLoginDTO;
-import com.marre.entity.dto.EmployeePageQueryDTO;
 import com.marre.entity.vo.EmployeeLoginVO;
 import com.marre.properties.JwtProperties;
 import com.marre.service.ScholarshipApplicationService;
+import com.marre.service.StudentService;
 import com.marre.utils.JwtUtil;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -42,6 +42,9 @@ public class EmployeeController {
 
     @Autowired
     private ScholarshipApplicationService applicationService;
+
+    @Autowired
+    StudentService studentService;
 
 
     /**
@@ -89,14 +92,26 @@ public class EmployeeController {
     }
 
     /**
-     * 分页查询
+     * 分页查询教师
      * @param employeePageQueryDTO
      * @return
      */
     @GetMapping("/page")
     public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
-        log.info("分页查询中：{}", employeePageQueryDTO);
+        log.info("分页查询教师中：{}", employeePageQueryDTO);
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
+        return Result.success(pageResult);
+    }
+
+    /**
+     * 分页查询学生
+     * @param studentPageQueryDTO
+     * @return
+     */
+    @GetMapping("/studentpage")
+    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO){
+        log.info("分页查询学生中：{}", studentPageQueryDTO);
+        PageResult pageResult = studentService.pageQuery(studentPageQueryDTO);
         return Result.success(pageResult);
     }
 
@@ -120,16 +135,6 @@ public class EmployeeController {
     public Result update(@RequestBody EmployeeDTO employeeDTO){
         log.info("修改信息为：{}", employeeDTO);
         employeeService.update(employeeDTO);
-        return Result.success();
-    }
-
-    /**
-     * 奖学金审核
-     * @param applicationDTO
-     * @return
-     */
-    public Result audits(@RequestBody ApplicationDTO applicationDTO){
-        applicationService.audits(applicationDTO);
         return Result.success();
     }
 

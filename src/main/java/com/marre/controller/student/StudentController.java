@@ -1,5 +1,8 @@
 package com.marre.controller.student;
 
+import com.marre.entity.Application;
+import com.marre.entity.dto.ApplicationDTO;
+import com.marre.service.ScholarshipApplicationService;
 import com.marre.service.StudentService;
 import com.marre.constant.JwtClaimsConstant;
 import com.marre.entity.Student;
@@ -8,9 +11,11 @@ import com.marre.entity.dto.StudentLoginDTO;
 import com.marre.entity.dto.StudentPageQueryDTO;
 import com.marre.entity.vo.StudentLoginVO;
 import com.marre.properties.JwtProperties;
+import com.marre.utils.BaseContext;
 import com.marre.utils.JwtUtil;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
+import io.micrometer.core.instrument.binder.BaseUnits;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping("/student/student")
+@RequestMapping("/student/student") //前一个代表从哪个客户端发来的请求
 @Api(tags = "学生接口")
 @Slf4j
 public class StudentController {
@@ -37,6 +42,9 @@ public class StudentController {
     @Autowired
     private JwtProperties jwtProperties;
 
+    @Autowired
+    private ScholarshipApplicationService applicationService;
+
     /**
      * 学生登陆
      * @param studentLoginDTO
@@ -46,14 +54,13 @@ public class StudentController {
     public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO){
         Student student = studentService.login(studentLoginDTO);
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put(JwtClaimsConstant.ID, student.getId());
-        String token = JwtUtil.createJWT(
+        // 生成token
+        String token = JwtUtil.createToken(
                 jwtProperties.getAdminSecretKey(),
-                jwtProperties.getUserTtl(),
-                claims
+                jwtProperties.getAdminTtl(),
+                student.getId()
         );
-
+        //  封装进vo对象
         StudentLoginVO studentLoginVO = StudentLoginVO.builder()
                 .id(student.getId())
                 .sNo(student.getSNo())
@@ -79,17 +86,17 @@ public class StudentController {
         return Result.success();
     }
 
-    @GetMapping("/page")
-    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO){
-        log.info("分页查询中：{}", studentPageQueryDTO);
-        PageResult pageResult = studentService.pageQuery(studentPageQueryDTO);
-        return Result.success(pageResult);
-    }
+//    @GetMapping("/page")
+//    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO){
+//        log.info("分页查询中：{}", studentPageQueryDTO);
+//        PageResult pageResult = studentService.pageQuery(studentPageQueryDTO);
+//        return Result.success(pageResult);
+//    }
 
     @GetMapping("/{id}")
     public Result<Student> getById(@PathVariable Long id){
+        log.info("查询学生中 Id：{}", id);
         Student student = studentService.getById(id);
-
         return Result.success(student);
     }
 

@@ -5,18 +5,15 @@ import lombok.Data;
 
 /**
  * @project: scholarshipSystemBackend
- * @ClassName: ApplicationDTO
+ * @ClassName: AuditDTO
  * @author: Marre
- * @creat: 2024/9/12 09:43
- * 奖学金审核DTO
+ * @creat: 2024/9/12 16:48
+ * 审核申请DTO
  */
 @Data
-public class ApplicationDTO {
+public class AuditDTO {
 
     private Long id;
 
-    private Long sNo;
-
     private AuditStatus status;
-
 }

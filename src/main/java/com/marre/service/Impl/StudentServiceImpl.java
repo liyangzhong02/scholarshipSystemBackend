@@ -61,10 +61,7 @@ public class StudentServiceImpl implements StudentService{
 
         student.setSPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
-        log.info("Current user ID before insert: {}", BaseContext.getCurrentId());
-        log.info("Before insert: {}", student);
         studentMapper.insert(student);
-        log.info("After insert: {}", student);
     }
 
     @Override
