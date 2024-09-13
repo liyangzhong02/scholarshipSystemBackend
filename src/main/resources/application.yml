@@ -41,4 +41,6 @@ marre:
 
   alioss:
     endpoint: oss-cn-shanghai.aliyuncs.com
+    access-key-id: LTAI5tFRu9JRYurD7J8YMXd6
+    access-key-secret: abcd12312312312312312312312
     bucket-name: marre-scolar
