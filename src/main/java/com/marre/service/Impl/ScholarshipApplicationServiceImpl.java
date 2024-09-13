@@ -1,11 +1,16 @@
 package com.marre.service.Impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.marre.entity.Application;
 import com.marre.entity.dto.ApplicationDTO;
+import com.marre.entity.dto.ApplicationPageQueryDTO;
 import com.marre.entity.dto.AuditDTO;
 import com.marre.enumeration.AuditStatus;
+import com.marre.mapper.ApplicationMapper;
 import com.marre.mapper.ApplicationRepository;
 import com.marre.service.ScholarshipApplicationService;
+import com.marre.utils.PageResult;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -38,11 +43,15 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private ApplicationMapper applicationMapper;
+
     /**
      * 学生提交审核
      * @param applicationDTO
      */
     @Override
+    @Transactional
     public void submitApplication(ApplicationDTO applicationDTO) {
 
         Application application = new Application();
@@ -64,12 +73,12 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
     }
 
     /**
-     * 审核申请
+     * 处理申请审核
      * @param auditDTO
      */
     @Override
     @Transactional
-    public void auditApplication(AuditDTO auditDTO) {
+    public void processApplication(AuditDTO auditDTO) {
         Long id = auditDTO.getId();
         AuditStatus newStatus = auditDTO.getStatus();
 
@@ -117,5 +126,17 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("申请信息id未找到: " + id));
         return application.getStatus();
+    }
+
+    /**
+     * 奖学金申请分页查询
+     * @param applicationPageQueryDTO
+     * @return
+     */
+    @Override
+    public PageResult pageQuery(ApplicationPageQueryDTO applicationPageQueryDTO) {
+        PageHelper.startPage(applicationPageQueryDTO.getPage(), applicationPageQueryDTO.getPageSize());
+        Page<Application> page = applicationMapper.pageQuery(applicationPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }

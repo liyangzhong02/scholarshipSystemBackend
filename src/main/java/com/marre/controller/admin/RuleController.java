@@ -6,6 +6,7 @@ import com.marre.entity.dto.RulePageQueryDTO;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class RuleController {
     private RuleService ruleService;
 
     @PostMapping()
+    @ApiOperation("新增规则")
     public Result save(@RequestBody RuleDTO ruleDTO){
         log.info("增加规则：{}", ruleDTO);
         ruleService.save(ruleDTO);
@@ -35,6 +37,7 @@ public class RuleController {
     }
 
     @DeleteMapping()
+    @ApiOperation("删除规则")
     public Result deleteByIds(@RequestParam List<Long> ids){
         log.info("删除规则：{}", ids);
         ruleService.deleteByIds(ids);
@@ -42,6 +45,7 @@ public class RuleController {
     }
 
     @PutMapping()
+    @ApiOperation("修改规则")
     public Result update(@RequestBody RuleDTO ruleDTO){
         log.info("修改规则：{}", ruleDTO);
         ruleService.update(ruleDTO);
@@ -49,6 +53,7 @@ public class RuleController {
     }
 
     @GetMapping("/page")
+    @ApiOperation("分页查询规则")
     public Result<PageResult> page(RulePageQueryDTO rulePageQueryDTO){
         log.info("分页查询：{}", rulePageQueryDTO);
         PageResult page = ruleService.pageQuery(rulePageQueryDTO);

@@ -15,6 +15,8 @@ public class ApplicationDTO {
 
     private Long id;
 
+    private String sName;
+
     private Long sNo;
 
     private AuditStatus status;

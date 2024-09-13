@@ -1,28 +1,20 @@
 package com.marre.controller.student;
 
-import com.marre.entity.Application;
-import com.marre.entity.dto.ApplicationDTO;
 import com.marre.service.ScholarshipApplicationService;
 import com.marre.service.StudentService;
-import com.marre.constant.JwtClaimsConstant;
 import com.marre.entity.Student;
 import com.marre.entity.dto.StudentDTO;
 import com.marre.entity.dto.StudentLoginDTO;
-import com.marre.entity.dto.StudentPageQueryDTO;
 import com.marre.entity.vo.StudentLoginVO;
 import com.marre.properties.JwtProperties;
-import com.marre.utils.BaseContext;
 import com.marre.utils.JwtUtil;
-import com.marre.utils.PageResult;
 import com.marre.utils.Result;
-import io.micrometer.core.instrument.binder.BaseUnits;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author :marRE
@@ -51,6 +43,7 @@ public class StudentController {
      * @return
      */
     @PostMapping("/login")
+    @ApiOperation("学生登陆")
     public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO){
         Student student = studentService.login(studentLoginDTO);
         // 生成token
@@ -74,9 +67,11 @@ public class StudentController {
      * @return
      */
     @PostMapping("/logout")
+    @ApiOperation("学生登出")
     public Result<String> logout(){return Result.success();}
 
-    @PostMapping()
+    @PostMapping
+    @ApiOperation("新增学生")
     public Result<String> save(@RequestBody StudentDTO studentDTO){
         log.info("新增学生：{}", studentDTO);
         studentService.save(studentDTO);
@@ -85,13 +80,15 @@ public class StudentController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation("根据id查询学生")
     public Result<Student> getById(@PathVariable Long id){
         log.info("查询学生中 Id：{}", id);
         Student student = studentService.getById(id);
         return Result.success(student);
     }
 
-    @PutMapping()
+    @PutMapping
+    @ApiOperation("修改学生信息")
     public Result update(@RequestBody StudentDTO studentDTO){
         log.info("修改信息：{}", studentDTO);
         studentService.update(studentDTO);

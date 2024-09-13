@@ -1,8 +1,10 @@
 package com.marre.service;
 
 import com.marre.entity.dto.ApplicationDTO;
+import com.marre.entity.dto.ApplicationPageQueryDTO;
 import com.marre.entity.dto.AuditDTO;
 import com.marre.enumeration.AuditStatus;
+import com.marre.utils.PageResult;
 
 /**
  * @project: scholarshipSystemBackend
@@ -15,7 +17,9 @@ public interface ScholarshipApplicationService {
 
     void submitApplication(ApplicationDTO applicationDTO);
 
-    void auditApplication(AuditDTO auditDTO);
+    void processApplication(AuditDTO auditDTO);
 
     AuditStatus getApplicationStatus(Long id);
+
+    PageResult pageQuery(ApplicationPageQueryDTO applicationPageQueryDTO);
 }

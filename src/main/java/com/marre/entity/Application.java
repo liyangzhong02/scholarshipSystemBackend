@@ -25,6 +25,9 @@ public class Application {
     //逻辑外键 与学号绑定
     private Long sNo;
 
+    //由id来获取sName
+    private String sName;
+
     private AuditStatus status;
 
     private LocalDateTime createTime;

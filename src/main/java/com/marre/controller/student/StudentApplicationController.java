@@ -5,6 +5,7 @@ import com.marre.service.ScholarshipApplicationService;
 import com.marre.utils.BaseContext;
 import com.marre.utils.Result;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ public class StudentApplicationController {
      * @return
      */
     @PostMapping
+    @ApiOperation("学生提交奖学金申请")
     public Result submitApplication(@RequestBody ApplicationDTO applicationDTO){
         applicationDTO.setSNo(BaseContext.getCurrentId());
         log.info("当前操作者学号：{}", applicationDTO.getSNo());
