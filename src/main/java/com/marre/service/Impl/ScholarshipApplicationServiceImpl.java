@@ -1,11 +1,14 @@
 package com.marre.service.Impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.marre.constant.GradeConstant;
 import com.marre.entity.Application;
 import com.marre.entity.dto.ApplicationDTO;
 import com.marre.entity.dto.ApplicationPageQueryDTO;
 import com.marre.entity.dto.AuditDTO;
+import com.marre.entity.dto.RuleApplicationDTO;
 import com.marre.enumeration.AuditStatus;
 import com.marre.mapper.ApplicationMapper;
 import com.marre.mapper.ApplicationRepository;
@@ -70,6 +73,43 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         //设置初始状态
         redisTemplate.opsForHash().put(AUDIT_STATUS_KEY, applicationDTO.getId().toString(), AuditStatus.PENDING.toString());
 
+    }
+
+    /**
+     * 学生撤回申请
+     * @param id
+     */
+    @Override
+    public void withdrawApplication(Long id) {
+        // 从mysql中查询申请
+        Application application = applicationRepository.findById(id).orElseThrow(() -> new RuntimeException("申请不存在"));
+
+        // 从redis list中移除
+        redisTemplate.opsForList().remove(AUDIT_QUEUE_KEY, 1, id.toString());
+        // 从redis hash中移除
+        redisTemplate.opsForHash().delete(AUDIT_STATUS_KEY, id.toString());
+        //从mysql中删除
+        applicationRepository.delete(application);
+    }
+
+    @Override
+    public Double calculate(RuleApplicationDTO ruleApplicationDTO) {
+        JSONObject jsonObject = JSONObject.parseObject(ruleApplicationDTO.getRule());
+
+        Integer grade = ruleApplicationDTO.getGrade();
+
+        if(grade == GradeConstant.GRADE_1){
+
+        }
+        else if (grade == GradeConstant.GRADE_2) {
+
+        }
+        else if(grade == GradeConstant.GRADE_3) {
+
+        }
+
+
+        return 0.0;
     }
 
     /**

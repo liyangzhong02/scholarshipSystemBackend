@@ -2,7 +2,9 @@ package com.marre.mapper;
 
 import com.github.pagehelper.Page;
 import com.marre.annotation.AutoFill;
+import com.marre.entity.Awards;
 import com.marre.entity.Student;
+import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.entity.dto.StudentDTO;
 import com.marre.entity.dto.StudentPageQueryDTO;
 import com.marre.enumeration.OperationType;
@@ -27,4 +29,6 @@ public interface StudentMapper {
 
     @AutoFill(OperationType.UPDATE)
     void update(Student student);
+
+    Page<Awards> awardsPageQuery(AwardsPageQueryDTO awardsPageQueryDTO);
 }

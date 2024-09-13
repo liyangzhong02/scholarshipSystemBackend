@@ -1,6 +1,7 @@
 package com.marre.service;
 
 import com.marre.entity.Student;
+import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.entity.dto.StudentDTO;
 import com.marre.entity.dto.StudentLoginDTO;
 import com.marre.entity.dto.StudentPageQueryDTO;
@@ -21,4 +22,6 @@ public interface StudentService {
     Student getById(Long id);
 
     void update(StudentDTO studentDTO);
+
+    PageResult awardsPageQuery(AwardsPageQueryDTO awardsPageQueryDTO);
 }

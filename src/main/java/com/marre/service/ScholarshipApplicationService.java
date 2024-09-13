@@ -3,6 +3,7 @@ package com.marre.service;
 import com.marre.entity.dto.ApplicationDTO;
 import com.marre.entity.dto.ApplicationPageQueryDTO;
 import com.marre.entity.dto.AuditDTO;
+import com.marre.entity.dto.RuleApplicationDTO;
 import com.marre.enumeration.AuditStatus;
 import com.marre.utils.PageResult;
 
@@ -22,4 +23,8 @@ public interface ScholarshipApplicationService {
     AuditStatus getApplicationStatus(Long id);
 
     PageResult pageQuery(ApplicationPageQueryDTO applicationPageQueryDTO);
+
+    void withdrawApplication(Long id);
+
+    Double calculate(RuleApplicationDTO ruleApplicationDTO);
 }

@@ -22,10 +22,10 @@ import java.util.UUID;
  * 通用工具类
  */
 @RestController
-@RequestMapping("/commom")
-@Api(tags = "通用接口")
+@RequestMapping("/upload")
+@Api(tags = "上传接口")
 @Slf4j
-public class CommonController {
+public class UploadController {
 
     @Autowired
     AliOssUtil aliOssUtil;
@@ -36,7 +36,7 @@ public class CommonController {
      * @return
      */
     @ApiOperation("文件上传")
-    @PostMapping("/upload")
+    @PostMapping("")
     public Result<String> upload(MultipartFile file) {
         log.info("文件上传中：{}", file.getOriginalFilename());
 

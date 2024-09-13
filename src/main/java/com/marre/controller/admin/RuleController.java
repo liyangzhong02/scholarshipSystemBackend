@@ -28,6 +28,11 @@ public class RuleController {
     @Autowired
     private RuleService ruleService;
 
+    /**
+     * 新增规则
+     * @param ruleDTO
+     * @return
+     */
     @PostMapping()
     @ApiOperation("新增规则")
     public Result save(@RequestBody RuleDTO ruleDTO){
@@ -36,6 +41,11 @@ public class RuleController {
         return Result.success();
     }
 
+    /**
+     * 删除规则
+     * @param ids
+     * @return
+     */
     @DeleteMapping()
     @ApiOperation("删除规则")
     public Result deleteByIds(@RequestParam List<Long> ids){
@@ -44,6 +54,11 @@ public class RuleController {
         return Result.success();
     }
 
+    /**
+     * 修改规则
+     * @param ruleDTO
+     * @return
+     */
     @PutMapping()
     @ApiOperation("修改规则")
     public Result update(@RequestBody RuleDTO ruleDTO){
@@ -52,6 +67,11 @@ public class RuleController {
         return Result.success();
     }
 
+    /**
+     * 分页查询规则
+     * @param rulePageQueryDTO
+     * @return
+     */
     @GetMapping("/page")
     @ApiOperation("分页查询规则")
     public Result<PageResult> page(RulePageQueryDTO rulePageQueryDTO){

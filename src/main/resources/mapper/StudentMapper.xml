@@ -46,4 +46,12 @@
     <select id="getById" resultType="com.marre.entity.Student">
         select * from student where id = #{id}
     </select>
+    <select id="awardsPageQuery" resultType="com.marre.entity.Awards">
+        select * from awards
+        <where>
+            <if test="sName != null">
+                and s_name like concat('%', #{sName}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

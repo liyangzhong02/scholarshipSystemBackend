@@ -2,6 +2,8 @@ package com.marre.service.Impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.marre.entity.Awards;
+import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.service.StudentService;
 import com.marre.constant.MessageConstant;
 import com.marre.constant.PasswordConstant;
@@ -86,5 +88,12 @@ public class StudentServiceImpl implements StudentService{
         Student student = new Student();
         BeanUtils.copyProperties(studentDTO, student);
         studentMapper.update(student);
+    }
+
+    @Override
+    public PageResult awardsPageQuery(AwardsPageQueryDTO awardsPageQueryDTO) {
+        PageHelper.startPage(awardsPageQueryDTO.getPage(), awardsPageQueryDTO.getPageSize());
+        Page<Awards> page = studentMapper.awardsPageQuery(awardsPageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
     }
 }

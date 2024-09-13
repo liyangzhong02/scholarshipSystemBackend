@@ -1,5 +1,6 @@
 package com.marre.controller.student;
 
+import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.service.ScholarshipApplicationService;
 import com.marre.service.StudentService;
 import com.marre.entity.Student;
@@ -8,6 +9,7 @@ import com.marre.entity.dto.StudentLoginDTO;
 import com.marre.entity.vo.StudentLoginVO;
 import com.marre.properties.JwtProperties;
 import com.marre.utils.JwtUtil;
+import com.marre.utils.PageResult;
 import com.marre.utils.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -93,5 +95,18 @@ public class StudentController {
         log.info("修改信息：{}", studentDTO);
         studentService.update(studentDTO);
         return Result.success();
+    }
+
+    /**
+     * 查询奖学金公示名单
+     * @param awardsPageQueryDTO
+     * @return
+     */
+    @GetMapping("/page")
+    @ApiOperation("查询公示名单")
+    public Result<PageResult> pageAwards(AwardsPageQueryDTO awardsPageQueryDTO){
+        log.info("Paging the Awards list");
+        PageResult pageResult = studentService.awardsPageQuery(awardsPageQueryDTO);
+        return Result.success(pageResult);
     }
 }
