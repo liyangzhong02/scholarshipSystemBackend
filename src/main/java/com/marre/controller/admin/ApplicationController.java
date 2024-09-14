@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
  * @creat: 2024/9/12 17:13
  * 奖学金申请Controller
  */
-@Controller
-@RestController("/admin/application")
+@RestController
+@RequestMapping("/admin/application")
 @Api(tags = "管理员申请奖学金接口")
 @Slf4j
 public class ApplicationController {

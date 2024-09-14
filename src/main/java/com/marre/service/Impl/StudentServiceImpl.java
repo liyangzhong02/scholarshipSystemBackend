@@ -2,6 +2,7 @@ package com.marre.service.Impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.marre.constant.NumConstant;
 import com.marre.entity.Awards;
 import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.service.StudentService;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 /**
@@ -62,7 +64,8 @@ public class StudentServiceImpl implements StudentService{
         BeanUtils.copyProperties(studentDTO, student);
 
         student.setSPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-
+        student.setSTotals(NumConstant.ZERO_F);
+        student.setIsPrice(false);
         studentMapper.insert(student);
     }
 
@@ -84,6 +87,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
+    @Transactional
     public void update(StudentDTO studentDTO) {
         Student student = new Student();
         BeanUtils.copyProperties(studentDTO, student);

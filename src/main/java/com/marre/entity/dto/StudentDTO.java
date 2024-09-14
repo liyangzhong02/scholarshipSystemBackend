@@ -19,7 +19,7 @@ public class StudentDTO {
 
     private String sName;
 
-    private String sGrade;
+    private Integer sGrade;
 
     private Integer sYear;
 

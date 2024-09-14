@@ -10,7 +10,7 @@ public class SchlorshipApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SchlorshipApplication.class, args);
-        log.info("server Started");
+        log.info("Server started");
     }
 
 }

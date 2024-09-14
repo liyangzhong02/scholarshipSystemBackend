@@ -37,7 +37,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @param registry
      */
     protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("开始注册自定义JWT拦截器{}", jwtTokenAdminInterceptor.getClass().getName());
+        log.info("jwt Interceptor is registering...");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
                 .addPathPatterns("/user/**")

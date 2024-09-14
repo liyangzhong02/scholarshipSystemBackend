@@ -1,5 +1,8 @@
 package com.marre.controller.admin;
 
+import com.marre.entity.Rule;
+import com.marre.entity.dto.GetRuleDTO;
+import com.marre.entity.vo.RuleVO;
 import com.marre.service.RuleService;
 import com.marre.entity.dto.RuleDTO;
 import com.marre.entity.dto.RulePageQueryDTO;
@@ -78,5 +81,18 @@ public class RuleController {
         log.info("分页查询：{}", rulePageQueryDTO);
         PageResult page = ruleService.pageQuery(rulePageQueryDTO);
         return Result.success(page);
+    }
+
+    /**
+     * 根据年份年级提取规则
+     * @param getRuleDTO
+     * @return
+     */
+    @GetMapping
+    @ApiOperation("根据年份年级提取规则")
+    public Result<RuleVO> getByYearAndGrade(GetRuleDTO getRuleDTO){
+        log.info("Searching the rule according to Year and Grade");
+        RuleVO ruleVO = ruleService.getByYearAndGrade(getRuleDTO);
+        return Result.success(ruleVO);
     }
 }

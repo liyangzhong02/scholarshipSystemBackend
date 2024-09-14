@@ -48,4 +48,15 @@
         </where>
         order by create_time desc
     </select>
+    <select id="getByYearAndGrade" resultType="com.marre.entity.Rule">
+        SELECT * FROM rule
+        <where>
+            <if test="year != null">
+                AND s_year = #{year}
+            </if>
+            <if test="grade != null">
+                AND grade = #{grade}
+            </if>
+        </where>
+    </select>
 </mapper>

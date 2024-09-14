@@ -3,6 +3,7 @@ package com.marre.mapper;
 import com.github.pagehelper.Page;
 import com.marre.annotation.AutoFill;
 import com.marre.entity.Rule;
+import com.marre.entity.dto.GetRuleDTO;
 import com.marre.entity.dto.RulePageQueryDTO;
 import com.marre.entity.vo.RuleVO;
 import com.marre.enumeration.OperationType;
@@ -28,4 +29,7 @@ public interface RuleMapper {
     void update(Rule rule);
 
     Page<RuleVO> pageQuery(RulePageQueryDTO rulePageQueryDTO);
+
+    Rule getByYearAndGrade(GetRuleDTO getRuleDTO);
+
 }

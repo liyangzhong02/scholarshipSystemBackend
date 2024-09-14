@@ -36,7 +36,6 @@ public class AutoFillAspect {
      */
     @Before("autoFillPointCut()")
     public void autoFill(JoinPoint joinPoint){
-
         //拦截数据库操作类型是 INSERT 还是 UPDATE
         MethodSignature signature = (MethodSignature) joinPoint.getSignature(); //方法签名对象
         AutoFill autoFill = signature.getMethod().getAnnotation(AutoFill.class);//获得方法上的注解
@@ -53,8 +52,6 @@ public class AutoFillAspect {
         //准备需要被赋值的数据
         LocalDateTime now = LocalDateTime.now();
         Long currentId = BaseContext.getCurrentId();
-        log.info("Current user ID from BaseContext: {}", currentId);
-
         if (currentId == null) {
             log.warn("Current user ID is null. Please ensure it's set properly.");
         }
@@ -62,13 +59,11 @@ public class AutoFillAspect {
         //根据不同的数据库操作类型 为属性赋值
         if(operationType == OperationType.INSERT){
             //为4个公共字段赋值
-            log.info("Performing INSERT autofill for entity: {}", entity.getClass().getSimpleName());
             try {
                 Method setCreateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_TIME, LocalDateTime.class);
                 Method setCreateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_CREATE_USER, Long.class);
                 Method setUpdateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
                 Method setUpdateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
-
                 //通过反射赋值
                 setCreateTime.invoke(entity, now);
                 setCreateUser.invoke(entity, currentId);
@@ -80,16 +75,17 @@ public class AutoFillAspect {
                 throw new RuntimeException(e);
             }
         }else if(operationType == OperationType.UPDATE){
-            //为两个公共字段赋值
+            // 为两个公共字段赋值
             try {
                 Method setUpdateTime = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_TIME, LocalDateTime.class);
                 Method setUpdateUser = entity.getClass().getDeclaredMethod(AutoFillConstant.SET_UPDATE_USER, Long.class);
-
-                //通过反射赋值
+                // 通过反射赋值
                 setUpdateTime.invoke(entity, now);
                 setUpdateUser.invoke(entity, currentId);
+                log.info("AutoFill for UPDATE completed successfully");
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error during AutoFill for INSERT", e);
+                throw new RuntimeException(e);
             }
         }
     }

@@ -19,7 +19,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface StudentMapper {
     Student getBySno(Long sNo);
 
-    @AutoFill(OperationType.INSERT)
+    @AutoFill(value = OperationType.INSERT)
     void insert(Student student);
 
 
@@ -27,7 +27,7 @@ public interface StudentMapper {
 
     Student getById(Long id);
 
-    @AutoFill(OperationType.UPDATE)
+    @AutoFill(value = OperationType.UPDATE)
     void update(Student student);
 
     Page<Awards> awardsPageQuery(AwardsPageQueryDTO awardsPageQueryDTO);

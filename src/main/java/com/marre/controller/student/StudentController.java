@@ -75,7 +75,7 @@ public class StudentController {
     @PostMapping
     @ApiOperation("新增学生")
     public Result<String> save(@RequestBody StudentDTO studentDTO){
-        log.info("新增学生：{}", studentDTO);
+        log.info("Student register：{}", studentDTO);
         studentService.save(studentDTO);
 
         return Result.success();

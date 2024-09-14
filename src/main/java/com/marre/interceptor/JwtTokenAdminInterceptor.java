@@ -36,10 +36,6 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
-        //获取当前线程id
-//        System.out.println("线程id：" + Thread.currentThread().getId());
-
         //判断当前拦截到的是Controller的方法还是其他资源
         if (!(handler instanceof HandlerMethod)) {
             //当前拦截到的不是动态方法，直接放行
@@ -57,19 +53,19 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
             BaseContext.setCurrentId(Id);
 
-            log.info("线程池抓取到当前id:{}", Id);
+            log.info("Operator id is:{}", Id);
             //3、通过，放行
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("JWT令牌已过期: {}", e.getMessage());
+            log.error("Token already expire");
             response.setStatus(401);
             return false;
         } catch (SignatureException e) {
-            log.error("JWT签名验证失败: {}", e.getMessage());
+            log.error("jwt Signature claims failed");
             response.setStatus(401);
             return false;
         } catch (Exception ex) {
-            log.error("JWT验证失败: {}", ex.getMessage());
+            log.error("jwt check failed");
             response.setStatus(401);
             return false;
         }

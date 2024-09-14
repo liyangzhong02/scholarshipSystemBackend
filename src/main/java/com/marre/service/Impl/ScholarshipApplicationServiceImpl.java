@@ -5,15 +5,17 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.marre.constant.GradeConstant;
 import com.marre.entity.Application;
-import com.marre.entity.dto.ApplicationDTO;
-import com.marre.entity.dto.ApplicationPageQueryDTO;
-import com.marre.entity.dto.AuditDTO;
-import com.marre.entity.dto.RuleApplicationDTO;
+import com.marre.entity.Student;
+import com.marre.entity.dto.*;
 import com.marre.enumeration.AuditStatus;
+import com.marre.exception.AccountNotFoundException;
+import com.marre.exception.NotAllowZeroException;
 import com.marre.mapper.ApplicationMapper;
 import com.marre.mapper.ApplicationRepository;
+import com.marre.mapper.StudentMapper;
 import com.marre.service.ScholarshipApplicationService;
 import com.marre.utils.PageResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -27,6 +29,9 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.marre.constant.MessageConstant.NOT_ALLOW_ZERO;
+import static java.lang.Math.max;
+
 /**
  * @project: scholarshipSystemBackend
  * @ClassName: ScholarshipApplicationServiceImpl
@@ -35,6 +40,7 @@ import java.util.List;
  * 奖学金审核实现类
  */
 @Service
+@Slf4j
 public class ScholarshipApplicationServiceImpl implements ScholarshipApplicationService {
 
     private static final String AUDIT_QUEUE_KEY = "audit:queue";
@@ -49,29 +55,49 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
     @Autowired
     private ApplicationMapper applicationMapper;
 
+    @Autowired
+    private StudentMapper studentMapper;
+
     /**
      * 学生提交审核
-     * @param applicationDTO
+     *
+     * @param submitApplicationDTO
      */
     @Override
     @Transactional
-    public void submitApplication(ApplicationDTO applicationDTO) {
+    public void submitApplication(SubmitApplicationDTO submitApplicationDTO) {
 
         Application application = new Application();
-        BeanUtils.copyProperties(applicationDTO, application);
+        BeanUtils.copyProperties(submitApplicationDTO, application);
         application.setCreateTime(LocalDateTime.now());
         application.setUpdateTime(LocalDateTime.now());
-        application.setCreateUser(application.getId());
-        application.setUpdateUser(application.getId());
+        application.setCreateUser(application.getSNo());
+        application.setUpdateUser(application.getSNo());
+        Long generatedId = generateNewId();
+        submitApplicationDTO.setId(generatedId);
 
         //保存到SQL
         application.setStatus(AuditStatus.PENDING);
         applicationRepository.save(application);
 
         //推入redis队列
-        redisTemplate.opsForList().leftPush(AUDIT_QUEUE_KEY, applicationDTO.getId().toString());
+        redisTemplate.opsForList().leftPush(AUDIT_QUEUE_KEY, submitApplicationDTO.getId().toString());
         //设置初始状态
-        redisTemplate.opsForHash().put(AUDIT_STATUS_KEY, applicationDTO.getId().toString(), AuditStatus.PENDING.toString());
+        redisTemplate.opsForHash().put(AUDIT_STATUS_KEY, submitApplicationDTO.getId().toString(), AuditStatus.PENDING.toString());
+
+        // 计算成绩
+        Double totalScore = calculate(submitApplicationDTO);
+
+        // 把成绩插入学生表
+        Student student = studentMapper.getBySno(submitApplicationDTO.getSNo());
+        if (student != null) {
+            student.setSTotals(totalScore);
+            studentMapper.update(student);
+        } else {
+            // 处理找不到学生的情况
+            log.error("Student NOT FOUND for SNo: {}", submitApplicationDTO.getSNo());
+        }
+
 
     }
 
@@ -92,25 +118,109 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         applicationRepository.delete(application);
     }
 
+    /**
+     * 根据规则计算总分
+     * @param submitApplicationDTO
+     * @return
+     */
     @Override
-    public Double calculate(RuleApplicationDTO ruleApplicationDTO) {
-        JSONObject jsonObject = JSONObject.parseObject(ruleApplicationDTO.getRule());
-
-        Integer grade = ruleApplicationDTO.getGrade();
-
-        if(grade == GradeConstant.GRADE_1){
-
-        }
-        else if (grade == GradeConstant.GRADE_2) {
-
-        }
-        else if(grade == GradeConstant.GRADE_3) {
-
+    public Double calculate(SubmitApplicationDTO submitApplicationDTO) {
+        JSONObject jsonObject = JSONObject.parseObject(submitApplicationDTO.getRule());
+        Integer grade = submitApplicationDTO.getGrade();
+        double totalScore = 0.0;
+        if (grade == GradeConstant.GRADE_1) {
+            totalScore = calculateForGrade1(jsonObject);
+        } else if (grade == GradeConstant.GRADE_2) {
+            totalScore = calculateForGrade2(jsonObject);
+        } else if (grade == GradeConstant.GRADE_3) {
+            totalScore = calculateForGrade3(jsonObject);
         }
 
-
-        return 0.0;
+        return totalScore;
     }
+
+    private double calculateForGrade3(JSONObject jsonObject) {
+        return ideologicalPerformance(jsonObject)
+                + researchCapacity(jsonObject)
+                + socialSecurity(jsonObject);
+    }
+
+    private double calculateForGrade2(JSONObject jsonObject) {
+        return academicPerformance(jsonObject)
+                + ideologicalPerformance(jsonObject)
+                + researchCapacity(jsonObject)
+                + socialSecurity(jsonObject);
+    }
+
+    private double calculateForGrade1(JSONObject jsonObject) {
+        return academicPerformance(jsonObject);
+    }
+
+    /**
+     * 学业成绩板块（上限20分）
+     * 学业成绩=学位课成绩总成绩÷学位课数量×20%
+     * @param jsonObject
+     * @return
+     */
+    private double academicPerformance(JSONObject jsonObject) {
+        JSONObject degreeJson = jsonObject.getJSONObject("学业成绩");
+        double courseScore = degreeJson.getDouble("学位课成绩总成绩");
+        int courseNum = degreeJson.getIntValue("学位课数量");
+        double courseWeight = degreeJson.getDouble("学位成绩权重");
+        if (courseNum == 0) {
+            throw new NotAllowZeroException("学位课数量" + NOT_ALLOW_ZERO);
+        }
+        if(courseWeight == 0.0){
+            throw new NotAllowZeroException("学位成绩权重" + NOT_ALLOW_ZERO);
+        }
+        double result = (courseScore / courseNum) * courseWeight;
+        return Math.min(result, 20.0);
+    }
+
+    /**
+     * 思政表现（上限 30 分）
+     * 满分（30 分）=基础分（20 分）+荣誉分（5 分）+导师组评价分（5 分）
+     * @param jsonObject
+     * @return
+     */
+    private double ideologicalPerformance(JSONObject jsonObject){
+        JSONObject degreeJson = jsonObject.getJSONObject("思政表现");
+        double baseScore = Math.max(20 - (degreeJson.getIntValue("通报批评")), 0);
+        double meritScore = degreeJson.getDouble("荣誉分");
+        double evaluationScore = degreeJson.getDouble("导师组评价分");
+        double result = baseScore + meritScore + evaluationScore;
+        return Math.min(result, 30.0);
+    }
+
+    /**
+     * 科研能力（上限 30 分）
+     * @param jsonObject
+     * @return
+     */
+    private double researchCapacity(JSONObject jsonObject){
+        JSONObject degreeJson = jsonObject.getJSONObject("科研能力");
+        double paperScore = degreeJson.getJSONObject("学术论文")
+                .getDouble("CCF推荐A类国际学术期刊")
+                + degreeJson.getJSONObject("学术论文").getDouble("CCF推荐B类国际学术期刊")
+                + degreeJson.getJSONObject("学术论文").getDouble("CCF推荐C类国际学术期刊")
+                + degreeJson.getJSONObject("学术论文").getDouble("CCF高质量中文期刊");
+        // ...剩余省略
+        double result = paperScore;
+        return Math.min(result, 30.0);
+    }
+
+    /**
+     * 社会服务（上限 20 分）
+     * 满分（20 分）=基础分（15 分）+附加分（5 分）
+     * @param jsonObject
+     * @return
+     */
+    private double socialSecurity(JSONObject jsonObject){
+        //...省略功能
+        double result = 0.0;
+        return Math.min(result, 30.0);
+    }
+
 
     /**
      * 处理申请审核
@@ -159,6 +269,8 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
 
         if(status != null) {
             return AuditStatus.valueOf(status.toString());
+        }else{
+            log.warn("Can't find the application in redis, checking mysql");
         }
 
         //redis没查询到 才去sql查询
@@ -178,5 +290,15 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         PageHelper.startPage(applicationPageQueryDTO.getPage(), applicationPageQueryDTO.getPageSize());
         Page<Application> page = applicationMapper.pageQuery(applicationPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    /**
+     * 获取到application的ID
+     * @return
+     */
+    public Long generateNewId() {
+        Application application = new Application(); // 创建一个新的Application对象
+        applicationRepository.save(application); // 保存以生成id
+        return application.getId(); // 返回生成的id
     }
 }

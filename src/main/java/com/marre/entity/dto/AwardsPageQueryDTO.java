@@ -13,7 +13,7 @@ import lombok.Data;
 public class AwardsPageQueryDTO {
     private String sName;
     //逻辑外键 学生年级
-    private String sGrade;
+    private Integer sGrade;
     // 逻辑外键 学生年份
     private Integer sYear;
     private String awardName;

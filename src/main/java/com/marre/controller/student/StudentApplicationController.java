@@ -3,6 +3,7 @@ package com.marre.controller.student;
 import com.marre.entity.Rule;
 import com.marre.entity.dto.ApplicationDTO;
 import com.marre.entity.dto.RuleApplicationDTO;
+import com.marre.entity.dto.SubmitApplicationDTO;
 import com.marre.enumeration.AuditStatus;
 import com.marre.service.ScholarshipApplicationService;
 import com.marre.utils.BaseContext;
@@ -21,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
  * @creat: 2024/9/12 17:16
  * 学生申请奖学金接口
  */
-@Controller
-@RestController("/student/application")
+@RestController
+@RequestMapping("/student/application")
 @Api(tags = "学生操作申请奖学金接口")
 @Slf4j
 public class StudentApplicationController {
@@ -31,16 +32,15 @@ public class StudentApplicationController {
 
     /**
      * 提交奖学金审核
-     * @param applicationDTO
+     * @param submitApplicationDTO
      * @return
      */
     @PostMapping
     @ApiOperation("学生提交奖学金申请")
-    public Result submitApplication(@RequestBody ApplicationDTO applicationDTO, @RequestBody RuleApplicationDTO ruleApplicationDTO){
-        applicationDTO.setSNo(BaseContext.getCurrentId());
-        log.info("The operator's id of submitApplication：{}", applicationDTO.getSNo());
-        applicationService.submitApplication(applicationDTO);
-        applicationService.calculate(ruleApplicationDTO);
+    public Result submitApplication(@RequestBody SubmitApplicationDTO submitApplicationDTO){
+        submitApplicationDTO.setSNo(BaseContext.getCurrentId());
+        log.info("The operator's id of submitApplication：{}", submitApplicationDTO.getSNo());
+        applicationService.submitApplication(submitApplicationDTO);
         return Result.success();
     }
 
