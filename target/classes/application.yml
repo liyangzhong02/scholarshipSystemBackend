@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/scholar?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: rootroot
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sky.entity
+  configuration:
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+
+marre:
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    admin-secret-key: scholarshipadmin
+    # 设置jwt过期时间 7200000
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
+
+    # 设置jwt签名加密时使用的秘钥
+    stu-secret-key: scholarshipstudent
+    # 设置jwt过期时间 7200000
+    stu-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    stu-token-name: token
+
+  alioss:
+    endpoint: oss-cn-shanghai.aliyuncs.com
+    access-key-id: LTAI5tFRu9JRYurD7J8YMXd6
+    access-key-secret: abcd12312312312312312312312
+    bucket-name: marre-scolar

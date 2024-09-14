@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.marre.mapper.StudentMapper">
+    <insert id="insert">
+        insert into student (s_no, s_name, s_password, s_totals, is_price, s_grade, s_year, update_time, update_user, create_time, create_user)
+      VALUES (#{sNo}, #{sName}, #{sPassword}, #{sTotals}, #{isPrice}, #{sGrade}, #{sYear}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})
+    </insert>
+    <update id="update" parameterType="com.marre.entity.Student">
+        update student
+        <set>
+            <if test="sNo != null and sNo != ''">
+                s_no = #{sNo},
+            </if>
+            <if test="sName != null and sName != ''">
+                s_name = #{sName},
+            </if>
+            <if test="sPassword != null">
+                s_password = #{sPassword},
+            </if>
+            <if test="sTotals != null">
+                s_totals = #{sTotals},
+            </if>
+            <if test="isPrice != null">
+                is_price = #{isPrice},
+            </if>
+            <if test="sGrade != null and sGrade != ''">
+                s_grade = #{sGrade},
+            </if>
+            <if test="sYear != null and sYear != ''">
+                s_year = #{sYear},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null">
+                update_user = #{updateUser},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <select id="getBySno" resultType="com.marre.entity.Student">
+        select * from student where s_no = #{sNo}
+    </select>
+    <select id="pageQuery" resultType="com.marre.entity.Student">
+        select * from student
+        <where>
+            <if test="sName != null">
+                and s_name like concat('%', #{sName}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="getById" resultType="com.marre.entity.Student">
+        select * from student where id = #{id}
+    </select>
+    <select id="awardsPageQuery" resultType="com.marre.entity.Awards">
+        select * from awards
+        <where>
+            <if test="sName != null">
+                and s_name like concat('%', #{sName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>
