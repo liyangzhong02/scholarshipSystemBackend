@@ -1,0 +1,66 @@
+create table application
+(
+    id          bigint auto_increment
+        primary key,
+    s_no        bigint       not null,
+    s_name      varchar(255) not null,
+    status      varchar(20)  not null,
+    create_user bigint       null,
+    update_user bigint       null,
+    create_time date         null,
+    update_time date         null
+);
+
+create table awards
+(
+    id         bigint auto_increment
+        primary key,
+    s_no       bigint       not null,
+    s_name     varchar(255) not null,
+    s_grade    varchar(10)  not null,
+    s_year     int          not null,
+    s_totals   double       not null,
+    award_name varchar(255) not null
+);
+
+create table employee
+(
+    id          bigint auto_increment
+        primary key,
+    e_no        bigint       not null,
+    e_name      varchar(255) not null,
+    e_password  varchar(255) not null,
+    create_user bigint       null,
+    update_user bigint       null
+);
+
+create table rule
+(
+    id          bigint auto_increment
+        primary key,
+    rule        varchar(1000) not null,
+    s_year      int           not null,
+    grade       int           not null,
+    create_user bigint        null,
+    update_user bigint        null,
+    create_time date          null,
+    update_time date          null
+);
+
+create table student
+(
+    id          bigint auto_increment
+        primary key,
+    s_no        bigint       not null,
+    s_name      varchar(255) not null,
+    s_password  varchar(255) not null,
+    s_totals    double       not null,
+    is_price    tinyint(1)   not null,
+    s_grade     int          not null,
+    s_year      int          not null,
+    create_user bigint       null,
+    update_user bigint       null,
+    create_time date         null,
+    update_time date         null
+);
+

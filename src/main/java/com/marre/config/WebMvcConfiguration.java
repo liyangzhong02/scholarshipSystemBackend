@@ -37,7 +37,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      * @param registry
      */
     protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("jwt Interceptor is registering...");
+        log.info("jwt Interceptor registering...");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
                 .addPathPatterns("/user/**")
@@ -50,6 +50,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
      */
     @Bean
     public Docket docket() {
+        log.info("Docket(Teacher) creating...");
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("教师端接口文档")
                 .version("1.0")
@@ -67,6 +68,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public Docket docket1() {
+        log.info("Docket(Student) creating...");
         ApiInfo apiInfo = new ApiInfoBuilder()
                 .title("学生端接口文档")
                 .version("1.0")

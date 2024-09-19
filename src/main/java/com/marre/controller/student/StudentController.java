@@ -47,6 +47,7 @@ public class StudentController {
     @PostMapping("/login")
     @ApiOperation("学生登陆")
     public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO){
+        log.info("Student login info:{}", studentLoginDTO);
         Student student = studentService.login(studentLoginDTO);
         // 生成token
         String token = JwtUtil.createToken(
@@ -84,7 +85,7 @@ public class StudentController {
     @GetMapping("/{id}")
     @ApiOperation("根据id查询学生")
     public Result<Student> getById(@PathVariable Long id){
-        log.info("查询学生中 Id：{}", id);
+        log.info("Get student by Id：{}", id);
         Student student = studentService.getById(id);
         return Result.success(student);
     }
@@ -92,7 +93,7 @@ public class StudentController {
     @PutMapping
     @ApiOperation("修改学生信息")
     public Result update(@RequestBody StudentDTO studentDTO){
-        log.info("修改信息：{}", studentDTO);
+        log.info("Update student：{}", studentDTO);
         studentService.update(studentDTO);
         return Result.success();
     }

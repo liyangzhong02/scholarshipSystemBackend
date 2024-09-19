@@ -22,6 +22,7 @@ mybatis:
   configuration:
     #开启驼峰命名
     map-underscore-to-camel-case: true
+  type-handlers-package: com.marre.utils.AuditStatusTypeHandler
 
 marre:
   jwt:

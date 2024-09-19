@@ -25,5 +25,4 @@ public interface ScholarshipApplicationService {
 
     Double calculate(SubmitApplicationDTO submitApplicationDTO);
 
-    Long generateNewId();
 }

@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marre.mapper.ApplicationMapper">
-
     <select id="pageQuery" resultType="com.marre.entity.Application">
-        select *
-        from application
-        WHERE (s_name LIKE CONCAT('%', #{sName}, '%') OR #{sName} IS NULL);
+        select id, s_no, s_name,
+        CASE
+        WHEN status = 0 THEN 'PENDING'
+        WHEN status = 1 THEN 'APPROVED'
+        WHEN status = 2 THEN 'REJECTED'
+        ELSE 'UNKNOWN'
+        END as status,
+        create_user, update_user, create_time, update_time from application
+        <where>
+            <if test="sName != null">
+                and s_name like concat('%', #{sName}, '%')
+            </if>
+        </where>
     </select>
 </mapper>

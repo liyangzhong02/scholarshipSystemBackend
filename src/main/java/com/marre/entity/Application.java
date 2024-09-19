@@ -20,16 +20,16 @@ public class Application {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 主键，自增ID
+    private Long id;
 
-    // 逻辑外键 与学号绑定
-    private Long sNo; // 学生学号
+    // Student表学号 逻辑外键
+    private Long sNo;
 
-    // 逻辑外键：由id来获取sName
-    private String sName; // 学生姓名
+    // Student表学生姓名 逻辑外键
+    private String sName;
 
-    // 审核进行情况 enum
-    private AuditStatus status; // 审核状态
+    // Enum类 审核进行状态
+    private AuditStatus status;
 
     private LocalDateTime createTime; // 创建时间
     private LocalDateTime updateTime; // 更新时间

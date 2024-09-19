@@ -67,23 +67,30 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
     @Transactional
     public void submitApplication(SubmitApplicationDTO submitApplicationDTO) {
 
+        if (submitApplicationDTO == null) {
+            throw new EntityNotFoundException("submitApplicationDTO cannot be null");
+        }
+
         Application application = new Application();
         BeanUtils.copyProperties(submitApplicationDTO, application);
         application.setCreateTime(LocalDateTime.now());
         application.setUpdateTime(LocalDateTime.now());
         application.setCreateUser(application.getSNo());
         application.setUpdateUser(application.getSNo());
-        Long generatedId = generateNewId();
-        submitApplicationDTO.setId(generatedId);
+        application.setStatus(AuditStatus.PENDING);
 
         //保存到SQL
-        application.setStatus(AuditStatus.PENDING);
         applicationRepository.save(application);
+        Long generatedId = application.getId();
+        submitApplicationDTO.setId(application.getId());
 
-        //推入redis队列
-        redisTemplate.opsForList().leftPush(AUDIT_QUEUE_KEY, submitApplicationDTO.getId().toString());
-        //设置初始状态
-        redisTemplate.opsForHash().put(AUDIT_STATUS_KEY, submitApplicationDTO.getId().toString(), AuditStatus.PENDING.toString());
+        try {
+            redisTemplate.opsForList().leftPush(AUDIT_QUEUE_KEY, generatedId.toString());
+            redisTemplate.opsForHash().put(AUDIT_STATUS_KEY, generatedId.toString(), AuditStatus.PENDING.toString());
+        } catch (Exception e) {
+            log.error("Failed to push to Redis", e);
+            throw new RuntimeException("Failed to push to Redis", e);
+        }
 
         // 计算成绩
         Double totalScore = calculate(submitApplicationDTO);
@@ -93,9 +100,11 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         if (student != null) {
             student.setSTotals(totalScore);
             studentMapper.update(student);
+            log.info("Updated score for student: {}", student.getSNo());
         } else {
             // 处理找不到学生的情况
             log.error("Student NOT FOUND for SNo: {}", submitApplicationDTO.getSNo());
+            throw new EntityNotFoundException("Student not found");
         }
 
 
@@ -268,9 +277,10 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         Object status = redisTemplate.opsForHash().get(AUDIT_STATUS_KEY, id.toString());
 
         if(status != null) {
+            log.info("The status in redis:{}", status.toString());
             return AuditStatus.valueOf(status.toString());
         }else{
-            log.warn("Can't find the application in redis, checking mysql");
+            log.warn("Can't find the application in redis");
         }
 
         //redis没查询到 才去sql查询
@@ -290,15 +300,5 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         PageHelper.startPage(applicationPageQueryDTO.getPage(), applicationPageQueryDTO.getPageSize());
         Page<Application> page = applicationMapper.pageQuery(applicationPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
-    }
-
-    /**
-     * 获取到application的ID
-     * @return
-     */
-    public Long generateNewId() {
-        Application application = new Application(); // 创建一个新的Application对象
-        applicationRepository.save(application); // 保存以生成id
-        return application.getId(); // 返回生成的id
     }
 }

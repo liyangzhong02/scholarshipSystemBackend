@@ -12,14 +12,14 @@ import lombok.Data;
  */
 @Data
 public class SubmitApplicationDTO {
-    // application表 逻辑外键
+    // application表id 逻辑外键
     private Long id;
-    // student表 逻辑外键
-    private String sName;
-    // student表 逻辑外键
+    // student表学号 逻辑外键
     private Long sNo;
-    // student表 逻辑外键
+    // student表学生姓名 逻辑外键
+    private String sName;
+    // student表学生年级 逻辑外键
     private Integer grade;
-    // Rule表 逻辑外键
+    // Rule表具体规则 逻辑外键
     private String rule;
 }
