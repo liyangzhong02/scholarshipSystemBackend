@@ -1,3 +1,4 @@
-INSERT INTO scholar.employee (id, e_no, e_name, e_password, create_user, update_user) VALUES (1, 1, 'Admin', 'e10adc3949ba59abbe56e057f20f883e', 1, 1);
-
+INSERT INTO scholar.employee (id, e_no, e_name, e_password, create_user, update_user, create_time, update_time) VALUES (1, 1, 'Admin', 'e10adc3949ba59abbe56e057f20f883e', 1, 1, null, null);
 INSERT INTO scholar.rule (id, rule, s_year, grade, create_user, update_user, create_time, update_time) VALUES (1, '{ "学业成绩": { "学位课成绩总成绩": null, "学位课数量": null, "学位成绩权重": 0.2 }, "思政表现": { "通报批评": null, "荣誉分": null, "导师组评价分": null }, "科研能力": { "学术论文": { "CCF推荐A类国际学术期刊": 30.0, "CCF推荐B类国际学术期刊": 20.0, "CCF推荐C类国际学术期刊": 1.0, "CCF高质量中文期刊": 2.0 } }, "社会服务": { "基础分": 15.0, "附加分": null } }', 2024, 2, 1, 1, '2024-09-14', '2024-09-14');
+INSERT INTO scholar.rule (id, rule, s_year, grade, create_user, update_user, create_time, update_time) VALUES (2, '{"学位课成绩总成绩": null, "学位课数量": null, "学位成绩权重": 0.2}', 2024, 1, 1, 1, '2024-09-19', '2024-09-19');
+INSERT INTO scholar.rule (id, rule, s_year, grade, create_user, update_user, create_time, update_time) VALUES (4, '{"思政表现": {"通报批评": null, "荣誉分": null, "导师组评价分": null}, "科研能力": {"学术论文": {"CCF推荐A类国际学术期刊": 30.0, "CCF推荐B类国际学术期刊": 20.0, "CCF推荐C类国际学术期刊": 1.0, "CCF高质量中文期刊": 2.0}}, "社会服务": {"基础分": 15.0, "附加分": null}}', 2024, 3, 1, 1, '2024-09-19', '2024-09-19');

@@ -1,4 +1,4 @@
-create table application
+create table if not exists application
 (
     id          bigint auto_increment
         primary key,
@@ -11,19 +11,7 @@ create table application
     update_time date         null
 );
 
-create table awards
-(
-    id         bigint auto_increment
-        primary key,
-    s_no       bigint       not null,
-    s_name     varchar(255) not null,
-    s_grade    varchar(10)  not null,
-    s_year     int          not null,
-    s_totals   double       not null,
-    award_name varchar(255) not null
-);
-
-create table employee
+create table if not exists employee
 (
     id          bigint auto_increment
         primary key,
@@ -31,10 +19,12 @@ create table employee
     e_name      varchar(255) not null,
     e_password  varchar(255) not null,
     create_user bigint       null,
-    update_user bigint       null
+    update_user bigint       null,
+    create_time date         null,
+    update_time date         null
 );
 
-create table rule
+create table if not exists rule
 (
     id          bigint auto_increment
         primary key,
@@ -47,17 +37,18 @@ create table rule
     update_time date          null
 );
 
-create table student
+create table if not exists student
 (
     id          bigint auto_increment
         primary key,
     s_no        bigint       not null,
-    s_name      varchar(255) not null,
+    s_name      varchar(255) null,
     s_password  varchar(255) not null,
     s_totals    double       not null,
     is_price    tinyint(1)   not null,
     s_grade     int          not null,
     s_year      int          not null,
+    award_name  varchar(255) null,
     create_user bigint       null,
     update_user bigint       null,
     create_time date         null,

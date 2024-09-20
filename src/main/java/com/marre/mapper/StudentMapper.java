@@ -10,6 +10,8 @@ import com.marre.entity.dto.StudentPageQueryDTO;
 import com.marre.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * @author :marRE
  * @Description:
@@ -22,6 +24,7 @@ public interface StudentMapper {
     @AutoFill(value = OperationType.INSERT)
     void insert(Student student);
 
+    List<Student> selectAll();
 
     Page<Student> pageQuery(StudentPageQueryDTO studentPageQueryDTO);
 

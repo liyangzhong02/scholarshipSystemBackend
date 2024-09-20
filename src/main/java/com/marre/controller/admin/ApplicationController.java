@@ -36,7 +36,7 @@ public class ApplicationController {
     @PostMapping
     @ApiOperation("处理申请审核")
     public Result auditApplication(@RequestBody AuditDTO auditDTO){
-        log.info("正在操作申请信息");
+        log.info("auditing application.");
         applicationService.processApplication(auditDTO);
         return Result.success();
     }

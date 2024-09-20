@@ -47,6 +47,9 @@ public class Student {
     // 学生应届年份
     private Integer sYear; // 应届年份
 
+    // 获奖类别
+    private String awardName;
+
     private LocalDateTime createTime; // 创建时间
     private LocalDateTime updateTime; // 更新时间
     private Long createUser; // 创建用户ID

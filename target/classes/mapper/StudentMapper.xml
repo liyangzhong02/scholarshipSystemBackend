@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marre.mapper.StudentMapper">
     <insert id="insert">
-        insert into student (s_no, s_name, s_password, s_totals, is_price, s_grade, s_year, update_time, update_user, create_time, create_user)
-      VALUES (#{sNo}, #{sName}, #{sPassword}, #{sTotals}, #{isPrice}, #{sGrade}, #{sYear}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})
+        insert into student (s_no, s_name, s_password, s_totals, is_price, s_grade, s_year, award_name, update_time, update_user, create_time, create_user)
+      VALUES (#{sNo}, #{sName}, #{sPassword}, #{sTotals}, #{isPrice}, #{sGrade}, #{sYear},${awardName}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})
     </insert>
     <update id="update" parameterType="com.marre.entity.Student">
         update student
@@ -28,6 +28,9 @@
             </if>
             <if test="sYear != null and sYear != ''">
                 s_year = #{sYear},
+            </if>
+            <if test="sYear != null and sYear != ''">
+            award_name = #{awardName},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
@@ -59,5 +62,8 @@
                 and s_name like concat('%', #{sName}, '%')
             </if>
         </where>
+    </select>
+    <select id="selectAll" resultType="com.marre.entity.Student">
+        select * from student
     </select>
 </mapper>

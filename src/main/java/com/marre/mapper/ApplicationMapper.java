@@ -3,6 +3,7 @@ package com.marre.mapper;
 import com.github.pagehelper.Page;
 import com.marre.entity.Application;
 import com.marre.entity.dto.ApplicationPageQueryDTO;
+import com.marre.enumeration.AuditStatus;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -16,4 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ApplicationMapper {
 
     Page<Application> pageQuery(ApplicationPageQueryDTO applicationPageQueryDTO);
+
+    AuditStatus getBySnoAndStatus(Long sNo);
 }

@@ -13,6 +13,7 @@ import com.marre.exception.NotAllowZeroException;
 import com.marre.mapper.ApplicationMapper;
 import com.marre.mapper.ApplicationRepository;
 import com.marre.mapper.StudentMapper;
+import com.marre.service.AwardService;
 import com.marre.service.ScholarshipApplicationService;
 import com.marre.utils.PageResult;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,9 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
     @Autowired
     private StudentMapper studentMapper;
 
+    @Autowired
+    private AwardService awardService;
+
     /**
      * 学生提交审核
      *
@@ -78,6 +82,13 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         application.setCreateUser(application.getSNo());
         application.setUpdateUser(application.getSNo());
         application.setStatus(AuditStatus.PENDING);
+
+        // 检查数据库中是否存在未处理的申请
+        AuditStatus existingApplication = applicationMapper.getBySnoAndStatus(submitApplicationDTO.getSNo());
+        if (existingApplication == AuditStatus.PENDING) {
+            log.error("Already have an application yet.");
+            throw new RuntimeException("Application already submitted for SNo: " + submitApplicationDTO.getSNo());
+        }
 
         //保存到SQL
         applicationRepository.save(application);
@@ -106,8 +117,6 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
             log.error("Student NOT FOUND for SNo: {}", submitApplicationDTO.getSNo());
             throw new EntityNotFoundException("Student not found");
         }
-
-
     }
 
     /**
@@ -208,8 +217,8 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
      */
     private double researchCapacity(JSONObject jsonObject){
         JSONObject degreeJson = jsonObject.getJSONObject("科研能力");
-        double paperScore = degreeJson.getJSONObject("学术论文")
-                .getDouble("CCF推荐A类国际学术期刊")
+        double paperScore = degreeJson.
+                getJSONObject("学术论文").getDouble("CCF推荐A类国际学术期刊")
                 + degreeJson.getJSONObject("学术论文").getDouble("CCF推荐B类国际学术期刊")
                 + degreeJson.getJSONObject("学术论文").getDouble("CCF推荐C类国际学术期刊")
                 + degreeJson.getJSONObject("学术论文").getDouble("CCF高质量中文期刊");
@@ -262,6 +271,11 @@ public class ScholarshipApplicationServiceImpl implements ScholarshipApplication
         } catch (Exception e) {
             // Redis 操作失败，回滚事务
             throw new RuntimeException("更新redis失败", e);
+        }
+        // 如果是通过，则更新奖学金得主
+        if(auditDTO.getStatus() == AuditStatus.APPROVED){
+            log.info("updating the awarded student.");
+            awardService.award();
         }
     }
 

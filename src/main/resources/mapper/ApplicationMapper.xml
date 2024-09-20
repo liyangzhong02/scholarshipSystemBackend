@@ -16,4 +16,18 @@
             </if>
         </where>
     </select>
+    <select id="getBySnoAndStatus" resultType="com.marre.enumeration.AuditStatus">
+        SELECT  CASE
+                WHEN status = 0 THEN 'PENDING'
+                WHEN status = 1 THEN 'APPROVED'
+                WHEN status = 2 THEN 'REJECTED'
+                ELSE 'UNKNOW'
+                END as status
+        FROM application
+        <where>
+            <if test="sNo != null">
+                and s_no = #{sNo}
+            </if>
+        </where>
+    </select>
 </mapper>
