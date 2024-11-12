@@ -36,6 +36,7 @@ import java.util.List;
 public class SpringFoxSwaggerConfig {
     /**
      * 配置基本信息
+     *
      * @return
      */
     @Bean
@@ -44,13 +45,13 @@ public class SpringFoxSwaggerConfig {
                 .title("Swagger Test App Restful API")
                 .description("swagger test app restful api")
                 .termsOfServiceUrl("https://github.com/geekxingyun")
-                .contact(new Contact("技术宅星云","https://xingyun.blog.csdn.net","fairy_xingyun@hotmail.com"))
                 .version("1.0")
                 .build();
     }
 
     /**
      * 配置文档生成最佳实践
+     *
      * @param apiInfo
      * @return
      */
@@ -80,6 +81,7 @@ public class SpringFoxSwaggerConfig {
         boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment, basePath);
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
     }
+
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment, String basePath) {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
     }

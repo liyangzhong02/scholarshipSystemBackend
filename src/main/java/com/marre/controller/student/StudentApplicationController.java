@@ -27,39 +27,39 @@ public class StudentApplicationController {
 
     /**
      * 提交奖学金审核
+     *
      * @param submitApplicationDTO
      * @return
      */
     @PostMapping
     @ApiOperation("学生提交奖学金申请")
-    public Result submitApplication(@RequestBody SubmitApplicationDTO submitApplicationDTO){
-        log.info("The operator's id of submitApplication：{}", submitApplicationDTO.getSNo());
+    public Result submitApplication(@RequestBody SubmitApplicationDTO submitApplicationDTO) {
         applicationService.submitApplication(submitApplicationDTO);
         return Result.success();
     }
 
     /**
      * 查询审核状态
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("学生查询审核状态")
-    public Result<AuditStatus> getApplicationStatus(@PathVariable Long id){
-        log.info("checking the audit status:{}", id);
+    public Result<AuditStatus> getApplicationStatus(@PathVariable Long id) {
         AuditStatus status = applicationService.getApplicationStatus(id);
         return Result.success(status);
     }
 
     /**
      * 学生撤销申请
+     *
      * @param id
      * @return
      */
     @PostMapping("/withdraw/{id}")
     @ApiOperation("学生撤销申请")
-    public Result withdrawApplication(@PathVariable Long id){
-        log.info("withDrawing the application!{}", id);
+    public Result withdrawApplication(@PathVariable Long id) {
         applicationService.withdrawApplication(id);
         return Result.success();
     }

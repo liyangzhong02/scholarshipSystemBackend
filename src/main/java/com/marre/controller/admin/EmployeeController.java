@@ -1,11 +1,12 @@
 package com.marre.controller.admin;
 
-import com.marre.entity.dto.*;
-import com.marre.service.EmployeeService;
 import com.marre.entity.Employee;
+import com.marre.entity.dto.EmployeeDTO;
+import com.marre.entity.dto.EmployeeLoginDTO;
+import com.marre.entity.dto.EmployeePageQueryDTO;
 import com.marre.entity.vo.EmployeeLoginVO;
 import com.marre.properties.JwtProperties;
-import com.marre.service.StudentService;
+import com.marre.service.EmployeeService;
 import com.marre.utils.JwtUtil;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
@@ -36,85 +37,84 @@ public class EmployeeController {
 
     /**
      * 员工登录
+     *
      * @param employeeLoginDTO
      * @return
      */
     @PostMapping("/login")
     @ApiOperation("管理员登陆")
-    public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO){
-        log.info("登录用户为：{}", employeeLoginDTO);
+    public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
         Employee employee = employeeService.login(employeeLoginDTO);
-        // 生成token
         String token = JwtUtil.createToken(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 employee.getId()
         );
-        // 封装进VO对象
-        EmployeeLoginVO employeeLoginVO = EmployeeLoginVO.builder()
-                .id(employee.getId())
-                .eNo(employee.getENo())
-                .token(token)
-                .build();
-
+        EmployeeLoginVO employeeLoginVO = new EmployeeLoginVO();
+        employeeLoginVO.setId(employee.getId());
+        employeeLoginVO.setENo(employee.getENo());
+        employeeLoginVO.setToken(token);
         return Result.success(employeeLoginVO);
     }
 
     /**
      * 登出
+     *
      * @return
      */
     @PostMapping("/logout")
     @ApiOperation("登出")
-    public Result<String> logout(){return Result.success();}
-
+    public Result<String> logout() {
+        return Result.success();
+    }
     /**
      * 新增员工
+     *
      * @param employeeDTO
      * @return
      */
     @PostMapping
     @ApiOperation("新增员工")
-    public Result<String> save(@RequestBody EmployeeDTO employeeDTO){
-        log.info("新增员工为：{}", employeeDTO);
+    public Result<String> save(@RequestBody EmployeeDTO employeeDTO) {
         employeeService.save(employeeDTO);
         return Result.success();
     }
 
     /**
      * 分页查询教师
+     *
      * @param employeePageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @ApiOperation("分页查询员工")
-    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO){
-        log.info("分页查询教师中：{}", employeePageQueryDTO);
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
 
     /**
      * 根据id查询用户
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询员工")
-    public Result<Employee> getById(@PathVariable Long id){
+    public Result<Employee> getById(@PathVariable Long id) {
         Employee employee = employeeService.getById(id);
         return Result.success(employee);
     }
 
     /**
      * 更新用户
+     *
      * @param employeeDTO
      * @return
      */
     @PutMapping()
     @ApiOperation("修改员工信息")
-    public Result update(@RequestBody EmployeeDTO employeeDTO){
-        log.info("修改信息为：{}", employeeDTO);
+    public Result update(@RequestBody EmployeeDTO employeeDTO) {
         employeeService.update(employeeDTO);
         return Result.success();
     }

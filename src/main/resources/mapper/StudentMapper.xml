@@ -2,8 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marre.mapper.StudentMapper">
     <insert id="insert">
-        insert into student (s_no, s_name, s_password, s_totals, is_price, s_grade, s_year, award_name, update_time, update_user, create_time, create_user)
-      VALUES (#{sNo}, #{sName}, #{sPassword}, #{sTotals}, #{isPrice}, #{sGrade}, #{sYear},${awardName}, #{updateTime}, #{updateUser}, #{createTime}, #{createUser})
+        insert into student (s_no, s_name, s_password, s_totals, is_price, s_grade, s_year, award_name, update_time,
+                             update_user, create_time, create_user)
+        VALUES (#{sNo}, #{sName}, #{sPassword}, #{sTotals}, #{isPrice}, #{sGrade}, #{sYear}, ${awardName},
+                #{updateTime}, #{updateUser}, #{createTime}, #{createUser})
     </insert>
     <update id="update" parameterType="com.marre.entity.Student">
         update student
@@ -30,7 +32,7 @@
                 s_year = #{sYear},
             </if>
             <if test="sYear != null and sYear != ''">
-            award_name = #{awardName},
+                award_name = #{awardName},
             </if>
             <if test="updateTime != null">
                 update_time = #{updateTime},
@@ -42,7 +44,9 @@
         where id = #{id}
     </update>
     <select id="getBySno" resultType="com.marre.entity.Student">
-        select * from student where s_no = #{sNo}
+        select *
+        from student
+        where s_no = #{sNo}
     </select>
     <select id="pageQuery" resultType="com.marre.entity.Student">
         select * from student
@@ -53,7 +57,9 @@
         </where>
     </select>
     <select id="getById" resultType="com.marre.entity.Student">
-        select * from student where id = #{id}
+        select *
+        from student
+        where id = #{id}
     </select>
     <select id="awardsPageQuery" resultType="com.marre.entity.Awards">
         select * from awards
@@ -64,6 +70,7 @@
         </where>
     </select>
     <select id="selectAll" resultType="com.marre.entity.Student">
-        select * from student
+        select *
+        from student
     </select>
 </mapper>

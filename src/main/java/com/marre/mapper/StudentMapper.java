@@ -5,7 +5,6 @@ import com.marre.annotation.AutoFill;
 import com.marre.entity.Awards;
 import com.marre.entity.Student;
 import com.marre.entity.dto.AwardsPageQueryDTO;
-import com.marre.entity.dto.StudentDTO;
 import com.marre.entity.dto.StudentPageQueryDTO;
 import com.marre.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;

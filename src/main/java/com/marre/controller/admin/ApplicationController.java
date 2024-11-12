@@ -30,25 +30,26 @@ public class ApplicationController {
 
     /**
      * 处理申请审核
+     *
      * @param auditDTO status
      * @return
      */
     @PostMapping
     @ApiOperation("处理申请审核")
-    public Result auditApplication(@RequestBody AuditDTO auditDTO){
-        log.info("auditing application.");
+    public Result auditApplication(@RequestBody AuditDTO auditDTO) {
         applicationService.processApplication(auditDTO);
         return Result.success();
     }
 
     /**
      * 查询审核状态
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("查询审核状态")
-    public Result<AuditStatus> getApplicationStatus(@PathVariable Long id){
+    public Result<AuditStatus> getApplicationStatus(@PathVariable Long id) {
         log.info("查询审核状态：{}", id);
         AuditStatus status = applicationService.getApplicationStatus(id);
         return Result.success(status);
@@ -56,12 +57,13 @@ public class ApplicationController {
 
     /**
      * 奖学金申请分页查询
+     *
      * @param applicationPageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @ApiOperation("分页查询申请表")
-    public Result<PageResult> page(ApplicationPageQueryDTO applicationPageQueryDTO){
+    public Result<PageResult> page(ApplicationPageQueryDTO applicationPageQueryDTO) {
         PageResult result = applicationService.pageQuery(applicationPageQueryDTO);
         return Result.success(result);
     }

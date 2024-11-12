@@ -1,13 +1,13 @@
 package com.marre.controller.student;
 
-import com.marre.entity.dto.AwardsPageQueryDTO;
-import com.marre.service.ScholarshipApplicationService;
-import com.marre.service.StudentService;
 import com.marre.entity.Student;
+import com.marre.entity.dto.AwardsPageQueryDTO;
 import com.marre.entity.dto.StudentDTO;
 import com.marre.entity.dto.StudentLoginDTO;
 import com.marre.entity.vo.StudentLoginVO;
 import com.marre.properties.JwtProperties;
+import com.marre.service.ScholarshipApplicationService;
+import com.marre.service.StudentService;
 import com.marre.utils.JwtUtil;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
@@ -16,6 +16,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -36,26 +38,23 @@ public class StudentController {
     @Autowired
     private JwtProperties jwtProperties;
 
-    @Autowired
-    private ScholarshipApplicationService applicationService;
+    public static final ConcurrentHashMap<String, Boolean> tokenBlacklist = new ConcurrentHashMap<>();
 
     /**
      * 学生登陆
+     *
      * @param studentLoginDTO
      * @return
      */
     @PostMapping("/login")
     @ApiOperation("学生登陆")
-    public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO){
-        log.info("Student login info:{}", studentLoginDTO);
+    public Result<StudentLoginVO> login(@RequestBody StudentLoginDTO studentLoginDTO) {
         Student student = studentService.login(studentLoginDTO);
-        // 生成token
         String token = JwtUtil.createToken(
                 jwtProperties.getAdminSecretKey(),
                 jwtProperties.getAdminTtl(),
                 student.getId()
         );
-        //  封装进vo对象
         StudentLoginVO studentLoginVO = StudentLoginVO.builder()
                 .id(student.getId())
                 .sNo(student.getSNo())
@@ -67,46 +66,50 @@ public class StudentController {
 
     /**
      * 登出
+     *
      * @return
      */
     @PostMapping("/logout")
     @ApiOperation("学生登出")
-    public Result<String> logout(){return Result.success();}
+    public Result<String> logout(@RequestHeader("Authorization") String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        // 将令牌添加到黑名单中
+        tokenBlacklist.put(token, true);
+        return Result.success("登出成功");
+    }
 
     @PostMapping
     @ApiOperation("新增学生")
-    public Result<String> save(@RequestBody StudentDTO studentDTO){
-        log.info("Student register：{}", studentDTO);
+    public Result<String> save(@RequestBody StudentDTO studentDTO) {
         studentService.save(studentDTO);
-
         return Result.success();
     }
 
     @GetMapping("/{id}")
     @ApiOperation("根据id查询学生")
-    public Result<Student> getById(@PathVariable Long id){
-        log.info("Get student by Id：{}", id);
+    public Result<Student> getById(@PathVariable Long id) {
         Student student = studentService.getById(id);
         return Result.success(student);
     }
 
     @PutMapping
     @ApiOperation("修改学生信息")
-    public Result update(@RequestBody StudentDTO studentDTO){
-        log.info("Update student：{}", studentDTO);
+    public Result update(@RequestBody StudentDTO studentDTO) {
         studentService.update(studentDTO);
         return Result.success();
     }
 
     /**
      * 查询奖学金公示名单
+     *
      * @param awardsPageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @ApiOperation("查询公示名单")
-    public Result<PageResult> pageAwards(AwardsPageQueryDTO awardsPageQueryDTO){
-        log.info("Paging the Awards list");
+    public Result<PageResult> pageAwards(AwardsPageQueryDTO awardsPageQueryDTO) {
         PageResult pageResult = studentService.awardsPageQuery(awardsPageQueryDTO);
         return Result.success(pageResult);
     }

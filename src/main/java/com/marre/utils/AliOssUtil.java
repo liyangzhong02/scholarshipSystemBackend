@@ -26,6 +26,7 @@ public class AliOssUtil {
 
     /**
      * 文件上传
+     *
      * @param bytes
      * @param objectName
      * @return
@@ -56,13 +57,12 @@ public class AliOssUtil {
             }
         }
         //文件访问路径规则 https://BucketName.Endpoint/ObjectName
-        StringBuilder stringBuilder = new StringBuilder("https://");
-        stringBuilder
-                .append(bucketName)
-                .append(".")
-                .append(endpoint)
-                .append("/")
-                .append(objectName);
-        return stringBuilder.toString();
+        String stringBuilder = "https://" +
+                bucketName +
+                "." +
+                endpoint +
+                "/" +
+                objectName;
+        return stringBuilder;
     }
 }

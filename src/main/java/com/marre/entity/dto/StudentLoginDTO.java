@@ -1,6 +1,5 @@
 package com.marre.entity.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**

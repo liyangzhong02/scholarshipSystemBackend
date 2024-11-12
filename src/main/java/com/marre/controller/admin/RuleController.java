@@ -1,11 +1,10 @@
 package com.marre.controller.admin;
 
-import com.marre.entity.Rule;
 import com.marre.entity.dto.GetRuleDTO;
-import com.marre.entity.vo.RuleVO;
-import com.marre.service.RuleService;
 import com.marre.entity.dto.RuleDTO;
 import com.marre.entity.dto.RulePageQueryDTO;
+import com.marre.entity.vo.RuleVO;
+import com.marre.service.RuleService;
 import com.marre.utils.PageResult;
 import com.marre.utils.Result;
 import io.swagger.annotations.Api;
@@ -33,64 +32,65 @@ public class RuleController {
 
     /**
      * 新增规则
+     *
      * @param ruleDTO
      * @return
      */
     @PostMapping()
     @ApiOperation("新增规则")
-    public Result save(@RequestBody RuleDTO ruleDTO){
-        log.info("增加规则：{}", ruleDTO);
+    public Result save(@RequestBody RuleDTO ruleDTO) {
         ruleService.save(ruleDTO);
         return Result.success();
     }
 
     /**
      * 删除规则
+     *
      * @param ids
      * @return
      */
     @DeleteMapping()
     @ApiOperation("删除规则")
-    public Result deleteByIds(@RequestParam List<Long> ids){
-        log.info("删除规则：{}", ids);
+    public Result deleteByIds(@RequestParam List<Long> ids) {
         ruleService.deleteByIds(ids);
         return Result.success();
     }
 
     /**
      * 修改规则
+     *
      * @param ruleDTO
      * @return
      */
     @PutMapping()
     @ApiOperation("修改规则")
-    public Result update(@RequestBody RuleDTO ruleDTO){
-        log.info("修改规则：{}", ruleDTO);
+    public Result update(@RequestBody RuleDTO ruleDTO) {
         ruleService.update(ruleDTO);
         return Result.success();
     }
 
     /**
      * 分页查询规则
+     *
      * @param rulePageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @ApiOperation("分页查询规则")
-    public Result<PageResult> page(RulePageQueryDTO rulePageQueryDTO){
-        log.info("分页查询：{}", rulePageQueryDTO);
+    public Result<PageResult> page(RulePageQueryDTO rulePageQueryDTO) {
         PageResult page = ruleService.pageQuery(rulePageQueryDTO);
         return Result.success(page);
     }
 
     /**
      * 根据年份年级提取规则
+     *
      * @param getRuleDTO
      * @return
      */
     @GetMapping
     @ApiOperation("根据年份年级提取规则")
-    public Result<RuleVO> getByYearAndGrade(GetRuleDTO getRuleDTO){
+    public Result<RuleVO> getByYearAndGrade(GetRuleDTO getRuleDTO) {
         log.info("Searching the rule according to Year and Grade");
         RuleVO ruleVO = ruleService.getByYearAndGrade(getRuleDTO);
         return Result.success(ruleVO);

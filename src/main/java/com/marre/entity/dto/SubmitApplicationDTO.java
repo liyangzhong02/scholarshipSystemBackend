@@ -1,6 +1,5 @@
 package com.marre.entity.dto;
 
-import com.marre.enumeration.AuditStatus;
 import lombok.Data;
 
 /**

@@ -30,22 +30,24 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Autowired
     private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
 
-
     /**
-     * 注册自定义拦截器 --> jwt
+     * 注册自定义拦截器
      *
      * @param registry
      */
+    @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        log.info("jwt Interceptor registering...");
+        log.info("Jwt拦截器启用...");
         registry.addInterceptor(jwtTokenAdminInterceptor)
                 .addPathPatterns("/admin/**")
                 .addPathPatterns("/user/**")
+                // 放行登录接口
                 .excludePathPatterns("/admin/employee/login");
     }
 
     /**
      * 通过knife4j生成接口文档
+     *
      * @return
      */
     @Bean
@@ -56,14 +58,13 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .version("1.0")
                 .description("")
                 .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("教师管理端")
                 .apiInfo(apiInfo)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.marre.controller.admin"))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
 
     @Bean
@@ -74,21 +75,21 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .version("1.0")
                 .description("")
                 .build();
-        Docket docket = new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("学生端")
                 .apiInfo(apiInfo)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.marre.controller.student"))
                 .paths(PathSelectors.any())
                 .build();
-        return docket;
     }
-
 
     /**
      * 设置静态资源映射 配合Swagger
+     *
      * @param registry
      */
+    @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -97,6 +98,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     /**
      * 扩展SPring mvc消息转换器
      * 序列化所有的Date格式
+     *
      * @param converters
      */
     @Override

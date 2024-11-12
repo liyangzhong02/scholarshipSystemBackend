@@ -1,8 +1,13 @@
 package com.marre.enumeration;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * 数据库操作类型
  */
+@Getter
+@AllArgsConstructor
 public enum OperationType {
 
     /**

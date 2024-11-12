@@ -30,12 +30,13 @@ public class AdminStudentController {
 
     /**
      * 分页查询学生
+     *
      * @param studentPageQueryDTO
      * @return
      */
     @GetMapping("/page")
     @ApiOperation("分页查询学生")
-    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO){
+    public Result<PageResult> page(StudentPageQueryDTO studentPageQueryDTO) {
         log.info("分页查询学生中：{}", studentPageQueryDTO);
         PageResult pageResult = studentService.pageQuery(studentPageQueryDTO);
         return Result.success(pageResult);
@@ -43,12 +44,13 @@ public class AdminStudentController {
 
     /**
      * 修改学生信息
+     *
      * @param studentDTO
      * @return
      */
     @PutMapping
     @ApiOperation("修改学生信息")
-    public Result update(@RequestBody StudentDTO studentDTO){
+    public Result update(@RequestBody StudentDTO studentDTO) {
         log.info("修改信息：{}", studentDTO);
         studentService.update(studentDTO);
         return Result.success();
@@ -56,12 +58,13 @@ public class AdminStudentController {
 
     /**
      * 新增学生
+     *
      * @param studentDTO
      * @return
      */
     @PostMapping
     @ApiOperation("新增学生")
-    public Result<String> save(@RequestBody StudentDTO studentDTO){
+    public Result<String> save(@RequestBody StudentDTO studentDTO) {
         log.info("新增学生：{}", studentDTO);
         studentService.save(studentDTO);
 
@@ -70,12 +73,13 @@ public class AdminStudentController {
 
     /**
      * 根据id查询学生
+     *
      * @param id
      * @return
      */
     @GetMapping("/{id}")
     @ApiOperation("根据id查询学生")
-    public Result<Student> getById(@PathVariable Long id){
+    public Result<Student> getById(@PathVariable Long id) {
         log.info("查询学生中 Id：{}", id);
         Student student = studentService.getById(id);
         return Result.success(student);

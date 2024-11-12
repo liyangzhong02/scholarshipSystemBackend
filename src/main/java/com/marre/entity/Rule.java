@@ -1,7 +1,8 @@
 package com.marre.entity;
 
-import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -17,28 +19,40 @@ import java.time.LocalDateTime;
  * @Description:
  * @Date :2024/9/2
  */
+
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(description = "Rule entity")
 public class Rule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 主键，自增ID
+    @ApiModelProperty(value = "Unique identifier for the rule", example = "1")
+    private Long id;
 
-    // 具体规则 Json存储
-    private String rule; // 规则内容
+    @NotNull
+    @ApiModelProperty(value = "The rule description", example = "Rule 101")
+    private String rule;
 
-    // 规则对应的应届年份
     @JsonProperty("sYear")
-    private Integer sYear; // 应届年份
+    @ApiModelProperty(value = "The starting year for the rule", example = "2023")
+    private Integer sYear;
 
-    // 规则对应的年级
-    private Integer grade; // 年级
+    @NotNull
+    @ApiModelProperty(value = "The grade associated with the rule", example = "5")
+    private Integer grade;
 
-    private LocalDateTime createTime; // 创建时间
-    private LocalDateTime updateTime; // 更新时间
-    private Long createUser; // 创建用户ID
-    private Long updateUser; // 更新用户ID
+    @ApiModelProperty(value = "The creation time of the rule", example = "2023-10-01T10:15:30")
+    private LocalDateTime createTime;
+
+    @ApiModelProperty(value = "The last update time of the rule", example = "2023-10-01T10:15:30")
+    private LocalDateTime updateTime;
+
+    @ApiModelProperty(value = "The ID of the user who created the rule", example = "123")
+    private Long createUser;
+
+    @ApiModelProperty(value = "The ID of the user who last updated the rule", example = "456")
+    private Long updateUser;
 }

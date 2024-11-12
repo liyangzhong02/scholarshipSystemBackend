@@ -8,7 +8,6 @@ import com.marre.entity.dto.RulePageQueryDTO;
 import com.marre.entity.vo.RuleVO;
 import com.marre.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ import java.util.List;
 public interface RuleMapper {
 
     @AutoFill(OperationType.INSERT)
-    public void insert(Rule rule);
+    void insert(Rule rule);
 
     void deleteByIds(List<Long> ids);
 

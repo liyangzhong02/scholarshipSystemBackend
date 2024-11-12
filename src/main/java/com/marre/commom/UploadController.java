@@ -31,29 +31,22 @@ public class UploadController {
     AliOssUtil aliOssUtil;
 
     /**
-     *文件上传
+     * 文件上传
+     *
      * @param file
      * @return
      */
     @ApiOperation("文件上传")
     @PostMapping("")
-    public Result<String> upload(MultipartFile file) {
-        log.info("文件上传中：{}", file.getOriginalFilename());
-
-        try {
-            //获取原始文件名以获取后缀
-            String originalFilename = file.getOriginalFilename();
-            //截取后缀
-            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-            //构造新文件名称
-            String objectName = UUID.randomUUID().toString() + extension;
-            //文件的请求路径
-            String filePath = aliOssUtil.upload(file.getBytes(), objectName);
-            return Result.success(filePath);
-        } catch (IOException e) {
-            log.error("文件上传失败:{}", e.getMessage());
-        }
-
-        return Result.error(MessageConstant.UPLOAD_FAILED);
+    public Result<String> upload(MultipartFile file) throws IOException {
+        //获取原始文件名以获取后缀
+        String originalFilename = file.getOriginalFilename();
+        //截取后缀
+        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        //构造新文件名称
+        String objectName = UUID.randomUUID() + extension;
+        //文件的请求路径
+        String filePath = aliOssUtil.upload(file.getBytes(), objectName);
+        return Result.success(filePath);
     }
 }

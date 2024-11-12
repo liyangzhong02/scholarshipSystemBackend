@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.marre.mapper.RuleMapper">
-
     <insert id="insert" useGeneratedKeys="false" keyProperty="id">
         insert into rule(rule, s_year, grade, create_time, update_time, create_user, update_user)
         VALUES (#{rule}, #{sYear}, #{grade}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
@@ -31,9 +30,9 @@
 
     <delete id="deleteByIds">
         delete from rule where id in
-                         <foreach collection="list" open="(" close=")" separator="," item="id">
-                             #{id}
-                         </foreach>
+        <foreach collection="list" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
     </delete>
 
     <select id="pageQuery" resultType="com.marre.entity.vo.RuleVO">

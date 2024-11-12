@@ -30,12 +30,13 @@ public class StudentRuleController {
 
     /**
      * 根据年份年级提取规则
+     *
      * @param getRuleDTO
      * @return
      */
     @GetMapping
     @ApiOperation("根据年份年级提取规则")
-    public Result<RuleVO> getByYearAndGrade(GetRuleDTO getRuleDTO){
+    public Result<RuleVO> getByYearAndGrade(GetRuleDTO getRuleDTO) {
         log.info("Searching the rule according to Year and Grade");
         RuleVO ruleVO = ruleService.getByYearAndGrade(getRuleDTO);
         return Result.success(ruleVO);
